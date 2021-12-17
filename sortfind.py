@@ -8,68 +8,95 @@ file = csv.reader(open("super.csv", 'r'))
 
 baris = [row for row in file]
 
+def clear():  #
+    os.system('cls')
+
 ##################################################################################
-def bubble_sort(arr, kolom):
-    n = len(arr)
+def bubble_sort(data, kolom):
+    n = len(data)
 
     for x in range (n - 1):
         for y in range(0+1, n-x-1):
-            if arr[y][kolom] > arr[y+1][kolom]:
-                arr[y], arr[y+1] = arr[y+1], arr[y]
+            if data[y][kolom] > data[y+1][kolom]:
+                data[y], data[y+1] = data[y+1], data[y]
     
-    return arr
+    return data
 
-# terurut = [','.join(row)+'\n' for row in bubble_sort(baris)]
 
-# with open("1.csv", 'w+') as f:
-#     f.writelines(terurut)
 
-def jump(arr, find, kolom):
+def jump(data, find, kolom):
     global p_loncat
-    n = len(arr)
+    n = len(data)
     p_loncat = math.sqrt(n)
     
-    while arr[int(p_loncat)][kolom] < find:
+    while data[int(p_loncat)][kolom] < find:
         p_loncat += math.sqrt(n)
         if p_loncat >= n:
             p_loncat = n-1
             break
 
-    while arr[int(p_loncat)][kolom] > find:
+    while data[int(p_loncat)][kolom] > find:
         p_loncat -=1
         if p_loncat < 0:
             break
 
-    if arr[int(p_loncat)][kolom] == find:
+    if data[int(p_loncat)][kolom] == find:
         print("Data found")
+        return 1
     else :
-        print("data not found")
+        return 0
 
-    return int(p_loncat)
+    # return int(p_loncat)
 
 # ####################################################################################
 
 while True:
+    clear()
+    print("""
+1. Searching Data
+2. Sorting Data
+3.  Exit""")
     menu = input("Masukkan Pilihan : ")
 
     if menu == '1':
         select = int(input("pilih kolom yang dicari : "))
+        print(f"Anda melakukan searching pada kolom {baris[0][select]} ")
+        print("Sedang dilakukan Sorting...")
         bubble_sort(baris, select)
+        print("Sorting Selesai")
         x = input("Masukkan data yang dicari : ")
-        jump(baris, x, select)
-        print(f'data ditemukan di kolom {baris[0][select]} di baris ke - {int(p_loncat)} ')
+        search = jump(baris, x, select)
+        if search == 1:    
+            print(f'data ditemukan di kolom {baris[0][select]} di baris ke - {int(p_loncat)} ')
+            print(f'{baris[0]}')
+            print(f'{baris[int(p_loncat)]}  ')
+        else :
+            print(f"Data {x} yang dicari tidak ditemukan ")
 
     elif menu == "2":
         select = int(input("pilih kolom yang di Sort : "))
+        print(f"Anda melakukan sorting pada kolom {baris[0][select]} ")
+        print("Sedang dilakukan Sorting...")
         start = time()
         terurut = [','.join(row)+'\n' for row in bubble_sort(baris, select)]
         end = time()
+        print("Sorting Selesai")
         x = input("input nama file dengan ext .csv : ")
         with open(x, 'w+') as f:
             f.writelines(terurut)
-        print(f"waktu yang dibutuhkan adalah {end-start:.2f}")
+        print(f"waktu yang dibutuhkan adalah {end-start:.2f} detik")
         # print()
 
-    elif menu == '3':
+    else:
         print("Terima kasih telah menggunakan program ini")
         break
+
+    print("Apakah anda ingin lanjut (y/n) ? ")
+
+    menu = input("Masukkan Pilihan : ")
+    if menu == 'n':
+        print("Terima kasih telah menggunakan program ini")
+        break
+    else:
+        clear()
+
